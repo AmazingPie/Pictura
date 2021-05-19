@@ -1,10 +1,13 @@
 import tkinter as tk
+from tkinter import ttk
+from tkinter import *
+from tkinter.ttk import *
 
 from controls import Controls
 from viewport import Viewport
 from gallery import Gallery
 
-class Main(tk.Frame):
+class Main(ttk.Frame):
 	def __init__(self, master):
 		super().__init__()
 
