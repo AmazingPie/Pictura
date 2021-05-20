@@ -22,6 +22,10 @@ class Controls(ttk.Frame):
 		self.dir_selector = tk.Button(self, command=self.choose_dir)
 		self.dir_selector.grid(row=1, column=1)
 
+		self.gen_rand_img = tk.Button(self, command=self.choose_rand_img,
+									  text="\nGenerate Image\n")
+		self.gen_rand_img.grid(row=2, column=0)
+
 	""" Set dir_path to chosen directory via filedialog window.	"""
 	def choose_dir(self):
 		# Set users chosen directory
@@ -34,3 +38,9 @@ class Controls(ttk.Frame):
 		for extension in extensions:
 			self.img_list.extend(glob.glob(dir_path + "/**/*." + extension,
 											recursive=True))
+
+	""" Choose a random image from img_list and return its filename. """
+	def choose_rand_img(self):
+		length = len(self.img_list)
+		file = self.img_list[random.randint(0, length)]
+		print("Filename = ", file)
