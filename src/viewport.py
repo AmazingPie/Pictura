@@ -77,4 +77,5 @@ class Viewport(ttk.Frame):
 			self.img_windows = [window]
 
 		window.title("Image")
-		img_window = image_window.ZoomAdvanced(window, path=self.filename)
+		window.geometry("500x500")
+		img_window = image_window.ImageWindow(window=window, filename=self.filename)
