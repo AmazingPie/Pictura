@@ -30,9 +30,14 @@ class Main(ttk.Frame):
 	:param name:	name of the state 'variable' to update
 	:param value:	value to give the state 'variable'
 	"""
-	def update_state(self, name, value):
+	def update_state(self, name, value=None):
 		if (name == "img"):
 			self.viewport.update_image(value)
+		elif (name == "new_img_window"):
+			window = tk.Toplevel(self.master)
+			self.viewport.create_img_window(window)
+		else:
+			print("No state 'variable' called: ", name)
 
 root = tk.Tk()
 main_window = Main(root)

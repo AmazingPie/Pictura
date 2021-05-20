@@ -4,6 +4,8 @@ from tkinter import *
 from tkinter.ttk import *
 from PIL import Image, ImageTk
 
+import image_window
+
 class Viewport(ttk.Frame):
 	CANVAS_WIDTH=500
 	CANVAS_HEIGHT=500
@@ -23,6 +25,7 @@ class Viewport(ttk.Frame):
 
 	""" Update the viewport image with the image given by the filename. """
 	def update_image(self, filename):
+		self.filename = filename
 		# Make the scaled image
 		img = Image.open(filename)
 		(width, height) = self.scale_to_canvas(*img.size)
@@ -58,3 +61,20 @@ class Viewport(ttk.Frame):
 			new_height = int(height / (width / self.CANVAS_WIDTH))
 
 		return (new_width, new_height)
+
+	""" Create a new zoomable image window.
+
+	Because Viewport is a component and not the main application window we
+	must be passed the basic empty window (Toplevel widget) which we will set
+	up.
+
+	:param window: a new empty window
+	"""
+	def create_img_window(self, window):
+		if (hasattr(self, "image_window")):
+			self.img_windows.append(window)
+		else:
+			self.img_windows = [window]
+
+		window.title("Image")
+		img_window = image_window.ZoomAdvanced(window, path=self.filename)

@@ -1,3 +1,8 @@
+"""
+Tkinter/PIL zoomable image window. Initial code modified from:
+https://github.com/foobar167/junkyard/blob/master/manual_image_annotation1
+"""
+
 import random
 import tkinter as tk
 from tkinter import ttk
@@ -19,7 +24,7 @@ class AutoScrollbar(ttk.Scrollbar):
     def place(self, **kw):
         raise tk.TclError('Cannot use place with this widget')
 
-class Zoom_Advanced(ttk.Frame):
+class ZoomAdvanced(ttk.Frame):
     ''' Advanced zoom of the image '''
     def __init__(self, mainframe, path):
         ''' Initialize the main Frame '''
@@ -136,8 +141,3 @@ class Zoom_Advanced(ttk.Frame):
                                                anchor='nw', image=imagetk)
             self.canvas.lower(imageid)  # set image into background
             self.canvas.imagetk = imagetk  # keep an extra reference to prevent garbage-collection
-
-path = 'E:\\New folder\\pics\\sc91y8y8cfq61.jpg'  # place path to your image here
-root = tk.Tk()
-app = Zoom_Advanced(root, path=path)
-root.mainloop()
