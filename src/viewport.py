@@ -51,8 +51,8 @@ class Viewport(ttk.Frame):
 		new_width = 0
 		new_height = 0
 		if (width < height):
-			new_width = self.CANVAS_WIDTH
-			new_height = int(height / (width / self.CANVAS_WIDTH))
+			new_height = self.CANVAS_HEIGHT
+			new_width = int(width / (height / self.CANVAS_HEIGHT))
 		else:
 			new_width = self.CANVAS_WIDTH
 			new_height = int(height / (width / self.CANVAS_WIDTH))
