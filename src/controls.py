@@ -4,6 +4,9 @@ from tkinter import ttk
 from tkinter import *
 from tkinter.ttk import *
 
+import glob
+import random
+
 class Controls(ttk.Frame):
 	def __init__(self):
 		super().__init__()
@@ -21,4 +24,13 @@ class Controls(ttk.Frame):
 
 	""" Set dir_path to chosen directory via filedialog window.	"""
 	def choose_dir(self):
-		self.dir_path.set(filedialog.askdirectory())
+		# Set users chosen directory
+		dir_path = filedialog.askdirectory()
+		self.dir_path.set(dir_path)
+
+		# Generate a list of the images in chosen directory
+		extensions = ["jpg", "jpeg", "png"]
+		self.img_list = []
+		for extension in extensions:
+			self.img_list.extend(glob.glob(dir_path + "/**/*." + extension,
+											recursive=True))
