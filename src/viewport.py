@@ -15,19 +15,27 @@ class Viewport(ttk.Frame):
 		self.label = ttk.Label(self, text="Controls!")
 		self.label.pack()
 
-		# Create image
-		self.img_dir = "..\\tests\\"
-		self.img = Image.open(self.img_dir + "cat-high.jpg")
-		(width, height) = self.scale_to_canvas(*self.img.size)
-		self.img = self.img.resize((width, height), Image.LANCZOS)
-
-		self.img_tk = ImageTk.PhotoImage(self.img)
 
 		# Create canvas
 		self.canvas = tk.Canvas(self, width=self.CANVAS_WIDTH, height=self.CANVAS_HEIGHT,
 								bg="black")
-		self.canvas.create_image(self.CANVAS_WIDTH / 2, self.CANVAS_HEIGHT / 2, image=self.img_tk)
 		self.canvas.pack()
+
+	""" Update the viewport image with the image given by the filename. """
+	def update_image(self, filename):
+		# Make the scaled image
+		img = Image.open(filename)
+		(width, height) = self.scale_to_canvas(*img.size)
+		img = img.resize((width, height), Image.LANCZOS)
+		self.img_tk = ImageTk.PhotoImage(img)
+
+		# Add the image to the canvas
+		if (hasattr(self, "img_canvas")):
+			self.canvas.itemconfig(self.img_canvas, image=self.img_tk)
+		else:
+			self.img_canvas = self.canvas.create_image(self.CANVAS_WIDTH / 2,
+													   self.CANVAS_HEIGHT / 2,
+													   image=self.img_tk)
 
 	""" Scale an image to the size of the canvas that contains it.
 

@@ -8,8 +8,10 @@ import glob
 import random
 
 class Controls(ttk.Frame):
-	def __init__(self):
+	def __init__(self, update_state):
 		super().__init__()
+
+		self.update_state = update_state
 
 		label = ttk.Label(self, text="Controls!")
 		label.grid(row=0 , column=0)
@@ -43,4 +45,4 @@ class Controls(ttk.Frame):
 	def choose_rand_img(self):
 		length = len(self.img_list)
 		file = self.img_list[random.randint(0, length)]
-		print("Filename = ", file)
+		self.update_state("img", file)

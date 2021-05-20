@@ -13,15 +13,26 @@ class Main(ttk.Frame):
 
 		self.master = master
 		self.master.title("Pictura")
-		#self.pack()
-		self.controls = Controls()
+		self.controls = Controls(self.update_state)
 		self.controls.grid(row=0, column=0)
 		self.viewport = Viewport()
 		self.viewport.grid(row=1, column=1)
 		self.gallery = Gallery()
 		self.gallery.grid(row=0, column=1)
 
+	""" Update the state of the globabl application
+	This allows individual components of the application communicate their own
+	state with each other.
 
+	This is most notably used to allow the controls component to interact with
+	and update the viewport and gallery.
+
+	:param name:	name of the state 'variable' to update
+	:param value:	value to give the state 'variable'
+	"""
+	def update_state(self, name, value):
+		if (name == "img"):
+			self.viewport.update_image(value)
 
 root = tk.Tk()
 main_window = Main(root)
