@@ -13,10 +13,12 @@ class Viewport(ttk.Frame):
 	def __init__(self):
 		super().__init__()
 
+		self.borderless = False
+		self.img_windows = []
+
 		# Create label
 		self.label = ttk.Label(self, text="Controls!")
 		self.label.pack()
-
 
 		# Create canvas
 		self.canvas = tk.Canvas(self, width=self.CANVAS_WIDTH, height=self.CANVAS_HEIGHT,
@@ -71,11 +73,15 @@ class Viewport(ttk.Frame):
 	:param window: a new empty window
 	"""
 	def create_img_window(self, window):
-		if (hasattr(self, "image_window")):
-			self.img_windows.append(window)
-		else:
-			self.img_windows = [window]
+		self.img_windows.append(window)
 
 		window.title("Image")
 		window.geometry("500x500")
 		img_window = image_window.ImageWindow(window=window, filename=self.filename)
+
+	""" Remove the borders from all image windows. """
+	def toggle_borders(self):
+		for window in self.img_windows:
+			window.overrideredirect(not self.borderless)	# toggle border
+
+		self.borderless = not self.borderless	# toggle the border state

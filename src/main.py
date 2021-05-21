@@ -36,6 +36,8 @@ class Main(ttk.Frame):
 		elif (name == "new_img_window"):
 			window = tk.Toplevel(self.master)
 			self.viewport.create_img_window(window)
+		elif (name == "toggle_borders"):
+			self.viewport.toggle_borders()
 		else:
 			print("No state 'variable' called: ", name)
 

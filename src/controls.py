@@ -32,6 +32,10 @@ class Controls(ttk.Frame):
 										text="\nAdd to window\n")
 		add_to_window.grid(row=3, column=0)
 
+		toggle_borders = tk.Button(self, command=self.toggle_borders,
+										text="\nToggle borders\n")
+		toggle_borders.grid(row=4, column=0)
+
 	""" Set dir_path to chosen directory via filedialog window.	"""
 	def choose_dir(self):
 		# Set users chosen directory
@@ -56,3 +60,7 @@ class Controls(ttk.Frame):
 			self.update_state("new_img_window")
 		else:
 			print("No image in viewport")
+
+	""" Remove borders for all children windows. """
+	def toggle_borders(self):
+		self.update_state("toggle_borders")
