@@ -15,6 +15,7 @@ class ImageWindow(ttk.Frame):
         self.canvas_width = self.canvas.winfo_width()
         self.canvas_height = self.canvas.winfo_height()
         self.canvas.bind("<MouseWheel>", self.on_scroll)    #windows only
+        self.canvas.bind("<B1-Motion>", self.on_drag)
 
         # Create the image
         self.img = Image.open(filename)
@@ -23,8 +24,10 @@ class ImageWindow(ttk.Frame):
         self.img = self.img.resize((width, height), Image.LANCZOS)
         self.img_tk = ImageTk.PhotoImage(self.img)
 
-        self.img_canvas = self.canvas.create_image(self.canvas_width / 2,
-                                               self.canvas_height / 2,
+        self.img_x = self.canvas_width / 2
+        self.img_y = self.canvas_height /2
+        self.img_canvas = self.canvas.create_image(self.img_x,
+                                               self.img_y,
                                                image=self.img_tk)
 
     """ Scale an image to the size of the canvas that contains it.
@@ -62,3 +65,15 @@ class ImageWindow(ttk.Frame):
 
         self.img_tk = ImageTk.PhotoImage(img)
         self.canvas.itemconfig(self.img_canvas, image=self.img_tk)
+
+    def on_drag(self, e):
+        # Work out how far the mouse moved (should be 1,-1 or 0)
+        delta_x = self.img_x - e.x
+        delta_y = self.img_y - e.y
+        # For the first movement our self.img_* is not set correctly so ignore
+        # the first movement
+        if ((abs(delta_x) > 1) | (abs(delta_y) > 1)):
+            self.img_x = e.x
+            self.img_y = e.y
+            return
+        self.canvas.move(self.img_canvas, -delta_x * 3, -delta_y * 3)
