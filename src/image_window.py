@@ -21,8 +21,8 @@ class ImageWindow(ttk.Frame):
         self.img = Image.open(filename)
         (width, height) = self.scale_to_canvas(*self.img.size)
         self.current_size = (width, height)
-        self.img = self.img.resize((width, height), Image.LANCZOS)
-        self.img_tk = ImageTk.PhotoImage(self.img)
+        img = self.img.resize((width, height), Image.LANCZOS)
+        self.img_tk = ImageTk.PhotoImage(img)
 
         self.img_x = self.canvas_width / 2
         self.img_y = self.canvas_height /2
