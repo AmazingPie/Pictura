@@ -66,6 +66,7 @@ class ImageWindow(ttk.Frame):
         self.img_tk = ImageTk.PhotoImage(img)
         self.canvas.itemconfig(self.img_canvas, image=self.img_tk)
 
+    """ Handle an event when the mouse moves after being pressed. """
     def on_drag(self, e):
         # Work out how far the mouse moved (should be 1,-1 or 0)
         delta_x = self.img_x - e.x
