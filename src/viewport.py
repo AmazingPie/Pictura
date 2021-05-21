@@ -77,6 +77,7 @@ class Viewport(ttk.Frame):
 
 		window.title("Image")
 		window.geometry("500x500")
+		window.overrideredirect(self.borderless)
 		img_window = image_window.ImageWindow(window=window, filename=self.filename)
 
 	""" Remove the borders from all image windows. """
