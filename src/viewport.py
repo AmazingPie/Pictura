@@ -76,7 +76,7 @@ class Viewport(ttk.Frame):
 		self.img_windows.append(window)
 
 		window.title("Image")
-		window.geometry("500x500")
+		window.geometry("500x720")
 		window.overrideredirect(self.borderless)
 		img_window = image_window.ImageWindow(window=window, filename=self.filename)
 
