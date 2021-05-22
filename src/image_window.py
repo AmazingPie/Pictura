@@ -61,16 +61,22 @@ class ImageWindow(ttk.Frame):
 
         return (new_width, new_height)
 
-    """ Handle a scrollwheel event """
+    """ Handle a scrollwheel event. """
     def on_scroll(self, e):
         if (e.delta < 0):   #scroll down -- zoom out
             (width, height) = map(lambda x : int(x * (1/1.1)), self.current_size)
             self.current_size = (width, height)
             img = self.img.resize((width, height), Image.LANCZOS)
         else:               #scroll up   -- zoom in
+            # Resize image.
             (width, height) = map(lambda x : int(x * 1.1), self.current_size)
             self.current_size = (width, height)
             img = self.img.resize((width, height), Image.LANCZOS)
+
+            # Move image a little closer to the mouse pointer.
+            delta_x = (self.img_x - e.x) // 4
+            delta_y = (self.img_y - e.y) // 4
+            self.canvas.move(self.img_canvas, delta_x, delta_y)
 
         self.img_tk = ImageTk.PhotoImage(img)
         self.canvas.itemconfig(self.img_canvas, image=self.img_tk)
