@@ -4,10 +4,18 @@ from tkinter import *
 from tkinter.ttk import *
 from PIL import Image, ImageTk
 
+import time
+
+NANO_TO_MILI = 1000000  # Divide time_ns() by this to get time in ms.
+
 class ImageWindow(ttk.Frame):
+    REFRESH_RATE = 225  # Time in ms between refreshing image when resizing.
+
     def __init__(self, window, filename):
         super().__init__(window)
         self.pack(fill="both", expand=True)
+
+        self.ms_between_event = time.time_ns() // NANO_TO_MILI
 
         self.canvas = tk.Canvas(self, bg="black")
         self.canvas.pack(fill="both", expand=True)
@@ -16,6 +24,7 @@ class ImageWindow(ttk.Frame):
         self.canvas_height = self.canvas.winfo_height()
         self.canvas.bind("<MouseWheel>", self.on_scroll)    #windows only
         self.canvas.bind("<B1-Motion>", self.on_drag)
+        self.canvas.bind("<Configure>", self.on_resize)
 
         # Create the image
         self.img = Image.open(filename)
@@ -68,13 +77,33 @@ class ImageWindow(ttk.Frame):
 
     """ Handle an event when the mouse moves after being pressed. """
     def on_drag(self, e):
-        # Work out how far the mouse moved (should be 1,-1 or 0)
+        # Work out how far the mouse moved (should be 1,-1 or 0).
         delta_x = self.img_x - e.x
         delta_y = self.img_y - e.y
         # For the first movement our self.img_* is not set correctly so ignore
-        # the first movement
+        # the first movement.
         if ((abs(delta_x) > 1) | (abs(delta_y) > 1)):
             self.img_x = e.x
             self.img_y = e.y
             return
         self.canvas.move(self.img_canvas, -delta_x * 3, -delta_y * 3)
+
+    """ Handle an event when the canvas/window has been resized. """
+    def on_resize(self, e):
+        # Only refresh the screen every REFRESH_RATE(ms) to reduce lag.
+        current_time = time.time_ns() // NANO_TO_MILI
+        if (current_time < self.ms_between_event + self.REFRESH_RATE):
+            return
+        else:
+            self.ms_between_event = current_time
+
+        # Get our new size.
+        self.canvas_width = e.width
+        self.canvas_height = e.height
+        self.current_size = self.scale_to_canvas(*self.current_size)
+
+        # Resize and re-locate our image on the canvas.
+        img = self.img.resize(self.current_size, Image.LANCZOS)
+        self.img_tk = ImageTk.PhotoImage(img)
+        self.canvas.itemconfig(self.img_canvas, image=self.img_tk)
+        self.canvas.coords(self.img_canvas, e.width / 2, e.height / 2)
