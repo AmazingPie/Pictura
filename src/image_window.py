@@ -9,7 +9,7 @@ import time
 NANO_TO_MILI = 1000000  # Divide time_ns() by this to get time in ms.
 
 class ImageWindow(ttk.Frame):
-    REFRESH_RATE = 225  # Time in ms between refreshing image when resizing.
+    REFRESH_RATE = 150  # Time in ms between refreshing image when resizing.
 
     def __init__(self, window, filename):
         super().__init__(window)
@@ -66,12 +66,12 @@ class ImageWindow(ttk.Frame):
         if (e.delta < 0):   #scroll down -- zoom out
             (width, height) = map(lambda x : int(x * (1/1.1)), self.current_size)
             self.current_size = (width, height)
-            img = self.img.resize((width, height), Image.LANCZOS)
+            img = self.img.resize((width, height), Image.HAMMING)
         else:               #scroll up   -- zoom in
             # Resize image.
             (width, height) = map(lambda x : int(x * 1.1), self.current_size)
             self.current_size = (width, height)
-            img = self.img.resize((width, height), Image.LANCZOS)
+            img = self.img.resize((width, height), Image.BILINEAR)
 
             # Move image a little closer to the mouse pointer.
             delta_x = (self.img_x - e.x) // 4
@@ -109,7 +109,7 @@ class ImageWindow(ttk.Frame):
         self.current_size = self.scale_to_canvas(*self.current_size)
 
         # Resize and re-locate our image on the canvas.
-        img = self.img.resize(self.current_size, Image.LANCZOS)
+        img = self.img.resize(self.current_size, Image.BILINEAR)
         self.img_tk = ImageTk.PhotoImage(img)
         self.canvas.itemconfig(self.img_canvas, image=self.img_tk)
         self.canvas.coords(self.img_canvas, e.width / 2, e.height / 2)
