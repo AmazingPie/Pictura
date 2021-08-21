@@ -23,9 +23,9 @@ class Controls(ttk.Frame):
 		label = ttk.Label(self, text="Controls!")
 		label.grid(row=0 , column=0)
 
-		# Image directory chooser
+		# Image/Video directory chooser
 		self.dir_path = tk.StringVar()
-		self.dir_path.set("path/to/img/dir")
+		self.dir_path.set("path/to/dir")
 		self.dir_entry = tk.Entry(self, textvariable=self.dir_path)
 		self.dir_entry.grid(row=1, column=0)
 		self.dir_selector = tk.Button(self, command=self.choose_dir)
@@ -60,16 +60,16 @@ class Controls(ttk.Frame):
 	def choose_rand_img(self):
 		length = len(self.img_list)
 		self.file_path = self.img_list[random.randint(0, length)]
-		self.update_state("img", self.file_path)
+		self.update_state("new_file", self.file_path)
 
 	""" Add the currently selected file (the one in the viewport) to its own
 		window.
 	"""
 	def add_to_window(self):
 		if (hasattr(self, "file_path")):
-			self.update_state("new_img_window")
+			self.update_state("new_window")
 		else:
-			print("No image in viewport")
+			print("Nothing in viewport")
 
 	""" Remove borders for all children windows. """
 	def toggle_borders(self):

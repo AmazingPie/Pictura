@@ -6,6 +6,9 @@ from PIL import Image, ImageTk
 
 import image_window
 
+from enum import Enum
+import os.path
+
 """ The viewport component of the main application window.
 
 This class represents the currently selected file via a viewport from which
@@ -19,6 +22,7 @@ class Viewport(ttk.Frame):
 		super().__init__()
 
 		self.borderless = False
+		self.file_type = FileType.NONE
 		self.img_windows = []
 
 		# Create label
@@ -30,11 +34,23 @@ class Viewport(ttk.Frame):
 								bg="black")
 		self.canvas.pack()
 
-	""" Update the viewport image with the image given by the filename. """
-	def update_image(self, filename):
+	""" Update the viewport with the image or video given by the filename. """
+	def update_viewport(self, filename):
 		self.filename = filename
+
+		# Find the file extension
+		_, ext = os.path.splitext(filename)
+		if ((ext == ".jpg") or (ext == ".jpeg") or (ext == ".png")):
+			self.file_type = FileType.IMAGE
+			self.update_image()
+		elif ((ext == ".gif") or (ext == ".mp4") or (ext == ".webm")):
+			self.filename_type = FileType.VIDEO
+			self.update_video()
+
+	""" Update the viewport image with the currently selected file. """
+	def update_image(self):
 		# Make the scaled image
-		img = Image.open(filename)
+		img = Image.open(self.filename)
 		(width, height) = self.scale_to_canvas(*img.size)
 		img = img.resize((width, height), Image.LANCZOS)
 		self.img_tk = ImageTk.PhotoImage(img)
@@ -46,6 +62,10 @@ class Viewport(ttk.Frame):
 			self.img_canvas = self.canvas.create_image(self.CANVAS_WIDTH / 2,
 													   self.CANVAS_HEIGHT / 2,
 													   image=self.img_tk)
+
+	""" Update the viewport with a thumbnail of the current file. """
+	def update_video(self):
+		pass
 
 	""" Scale an image to the size of the canvas that contains it.
 
@@ -69,11 +89,20 @@ class Viewport(ttk.Frame):
 
 		return (new_width, new_height)
 
-	""" Create a new zoomable image window.
+	""" Create a new image or video window from the image/video currently in
+		the viewport.
 
 	Because Viewport is a component and not the main application window we
 	must be passed the basic empty window (Toplevel widget) which we will set
 	up.
+
+	:param: a new empty window
+	"""
+	def create_window(self, window):
+		pass
+
+	""" Create a new zoomable image window from the current image in the
+		viewport.
 
 	:param window: a new empty window
 	"""
@@ -85,9 +114,22 @@ class Viewport(ttk.Frame):
 		window.overrideredirect(self.borderless)
 		img_window = image_window.ImageWindow(window=window, filename=self.filename)
 
-	""" Remove the borders from all image windows. """
+	""" Create a new looping video window from the current video in the
+		viewport.
+
+	:param window: a new empty window
+	"""
+	def create_video_window(self, window):
+		pass
+
+	""" Remove the borders from all windows. """
 	def toggle_borders(self):
 		for window in self.img_windows:
 			window.overrideredirect(not self.borderless)	# toggle border
 
 		self.borderless = not self.borderless	# toggle the border state
+
+class FileType(Enum):
+	UNKNOWN = 0
+	IMAGE 	= 1
+	VIDEO 	= 2
