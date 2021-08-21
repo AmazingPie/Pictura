@@ -8,6 +8,12 @@ import time
 
 NANO_TO_MILI = 1000000  # Divide time_ns() by this to get time in ms.
 
+""" A scalable, pan-able and zoomable image window.
+
+Scalable - The image automatically resizes when the window is resized.
+Pan-able - The image can be panned (moved) by dragging.
+Zoomable - The image can be zoomed in/out by scrolling the mousewheel.
+"""
 class ImageWindow(ttk.Frame):
     REFRESH_RATE = 150  # Time in ms between refreshing image when resizing.
 
@@ -47,7 +53,7 @@ class ImageWindow(ttk.Frame):
 
     :param width:   width of the image to scale
     :param height:  height of the image to scale
-    :return:        a scaled (width, height) size tuple
+    :returns:       a scaled (width, height) size tuple
     """
     def scale_to_canvas(self, width, height):
         new_width = 0

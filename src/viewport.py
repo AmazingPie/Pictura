@@ -6,6 +6,11 @@ from PIL import Image, ImageTk
 
 import image_window
 
+""" The viewport component of the main application window.
+
+This class represents the currently selected file via a viewport from which
+files can be previewed before further action is taken by the user.
+"""
 class Viewport(ttk.Frame):
 	CANVAS_WIDTH=500
 	CANVAS_HEIGHT=500
@@ -50,7 +55,7 @@ class Viewport(ttk.Frame):
 
 	:param width:	width of the image to scale
 	:param height:	height of the image to scale
-	:return:		a scaled (width, height) size tuple
+	:returns:		a scaled (width, height) size tuple
 	"""
 	def scale_to_canvas(self, width, height):
 		new_width = 0

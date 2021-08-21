@@ -7,6 +7,13 @@ from tkinter.ttk import *
 import glob
 import random
 
+""" The controls component of the main application window.
+
+This class contains various inputs (buttons, text entry boxes, etc...) to allow
+the user to control the rest of the application. The class itself does very
+little processing and is mostly a front end interface combined which then
+communicates instructions to other main application window components.
+"""
 class Controls(ttk.Frame):
 	def __init__(self, update_state):
 		super().__init__()
@@ -55,6 +62,9 @@ class Controls(ttk.Frame):
 		self.file_path = self.img_list[random.randint(0, length)]
 		self.update_state("img", self.file_path)
 
+	""" Add the currently selected file (the one in the viewport) to its own
+		window.
+	"""
 	def add_to_window(self):
 		if (hasattr(self, "file_path")):
 			self.update_state("new_img_window")

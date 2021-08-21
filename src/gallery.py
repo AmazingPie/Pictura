@@ -3,6 +3,10 @@ from tkinter import ttk
 from tkinter import *
 from tkinter.ttk import *
 
+""" The gallery component of the main application window.
+
+This class stores previously found images for later use.
+"""
 class Gallery(ttk.Frame):
 	def __init__(self):
 		super().__init__()
