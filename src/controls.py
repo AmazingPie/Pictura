@@ -19,6 +19,8 @@ class Controls(ttk.Frame):
 		super().__init__()
 
 		self.update_state = update_state
+		self.img_list = []
+		self.video_list = []
 
 		label = ttk.Label(self, text="Controls!")
 		label.grid(row=0 , column=0)
@@ -31,17 +33,23 @@ class Controls(ttk.Frame):
 		self.dir_selector = tk.Button(self, command=self.choose_dir)
 		self.dir_selector.grid(row=1, column=1)
 
-		gen_rand_img = tk.Button(self, command=self.choose_rand_img,
-									  text="\nGenerate Image\n")
+		gen_rand_img = tk.Button(self,
+								 command=lambda: self.choose_rand_file(self.img_list),
+								 text="\nGenerate Image\n")
 		gen_rand_img.grid(row=2, column=0)
+
+		gen_rand_video = tk.Button(self,
+								   command=lambda: self.choose_rand_file(self.video_list),
+								   text="\nRandom Video\n")
+		gen_rand_video.grid(row=3, column=0)
 
 		add_to_window = tk.Button(self, command=self.add_to_window,
 										text="\nAdd to window\n")
-		add_to_window.grid(row=3, column=0)
+		add_to_window.grid(row=4, column=0)
 
 		toggle_borders = tk.Button(self, command=self.toggle_borders,
 										text="\nToggle borders\n")
-		toggle_borders.grid(row=4, column=0)
+		toggle_borders.grid(row=5, column=0)
 
 	""" Set dir_path to chosen directory via filedialog window.	"""
 	def choose_dir(self):
@@ -49,17 +57,31 @@ class Controls(ttk.Frame):
 		dir_path = filedialog.askdirectory()
 		self.dir_path.set(dir_path)
 
-		# Generate a list of the images in chosen directory
-		extensions = ["jpg", "jpeg", "png"]
-		self.img_list = []
-		for extension in extensions:
-			self.img_list.extend(glob.glob(dir_path + "/**/*." + extension,
-											recursive=True))
+		# Populate lists with files from the chosen directory
+		self.img_list = self.find_files_from_ext(["jpg", "jpeg", "png"])
+		self.video_list = self.find_files_from_ext(["gif", "mp4", "webm"])
 
-	""" Choose a random image from img_list and return its filename. """
-	def choose_rand_img(self):
-		length = len(self.img_list)
-		self.file_path = self.img_list[random.randint(0, length)]
+	""" Find filenames with the given extensions.
+
+	:param extensions:	a string array with file extensions to find
+	:returns:			an array of filenames that have one of the given
+						extensions
+	"""
+	def find_files_from_ext(self, extensions):
+		filenames = []
+		for extension in extensions:
+			filenames.extend(glob.glob(self.dir_path.get() + "/**/*." + extension,
+									   recursive=True))
+		return filenames
+
+	""" Choose a random file from the given list and use it to update the
+		viewport.
+
+	:param file_list:	list of files
+	"""
+	def choose_rand_file(self, file_list):
+		length = len(file_list)
+		self.file_path = file_list[random.randint(0, length)]
 		self.update_state("new_file", self.file_path)
 
 	""" Add the currently selected file (the one in the viewport) to its own

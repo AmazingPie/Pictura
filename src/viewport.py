@@ -4,7 +4,8 @@ from tkinter import *
 from tkinter.ttk import *
 from PIL import Image, ImageTk
 
-import image_window
+import image_window as iw
+import video_window as vw
 
 from enum import Enum
 import os.path
@@ -22,8 +23,9 @@ class Viewport(ttk.Frame):
 		super().__init__()
 
 		self.borderless = False
-		self.file_type = FileType.NONE
+		self.file_type = FileType.UNKNOWN
 		self.img_windows = []
+		self.video_windows = []
 
 		# Create label
 		self.label = ttk.Label(self, text="Controls!")
@@ -34,18 +36,31 @@ class Viewport(ttk.Frame):
 								bg="black")
 		self.canvas.pack()
 
+	""" Get the type of a file from it's extension.
+
+	:param filename:	the name of the file
+	:returns:			the type of the file
+	"""
+	def get_file_type(self, filename):
+		_, ext = os.path.splitext(filename)
+		if ((ext == ".jpg") or (ext == ".jpeg") or (ext == ".png")):
+			return FileType.IMAGE
+		elif ((ext == ".gif") or (ext == ".mp4") or (ext == ".webm")):
+			return FileType.VIDEO
+		else:
+			return FileType.UNKNOWN
+
 	""" Update the viewport with the image or video given by the filename. """
 	def update_viewport(self, filename):
 		self.filename = filename
 
-		# Find the file extension
-		_, ext = os.path.splitext(filename)
-		if ((ext == ".jpg") or (ext == ".jpeg") or (ext == ".png")):
-			self.file_type = FileType.IMAGE
+		self.file_type = self.get_file_type(filename)
+		if (self.file_type == FileType.IMAGE):
 			self.update_image()
-		elif ((ext == ".gif") or (ext == ".mp4") or (ext == ".webm")):
-			self.filename_type = FileType.VIDEO
+		elif (self.file_type == FileType.VIDEO):
 			self.update_video()
+		else:
+			print("Error: file type not recognised.")
 
 	""" Update the viewport image with the currently selected file. """
 	def update_image(self):
@@ -65,6 +80,7 @@ class Viewport(ttk.Frame):
 
 	""" Update the viewport with a thumbnail of the current file. """
 	def update_video(self):
+		print(self.filename)
 		pass
 
 	""" Scale an image to the size of the canvas that contains it.
@@ -99,7 +115,12 @@ class Viewport(ttk.Frame):
 	:param: a new empty window
 	"""
 	def create_window(self, window):
-		pass
+		if (self.file_type == FileType.IMAGE):
+			self.create_img_window(window)
+		elif (self.file_type == FileType.VIDEO):
+			self.create_video_window(window)
+		else:
+			print("Error: file type not recognised.")
 
 	""" Create a new zoomable image window from the current image in the
 		viewport.
@@ -112,7 +133,7 @@ class Viewport(ttk.Frame):
 		window.title("Image")
 		window.geometry("500x720")
 		window.overrideredirect(self.borderless)
-		img_window = image_window.ImageWindow(window=window, filename=self.filename)
+		img_window = iw.ImageWindow(window=window, filename=self.filename)
 
 	""" Create a new looping video window from the current video in the
 		viewport.
