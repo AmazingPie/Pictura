@@ -141,7 +141,12 @@ class Viewport(ttk.Frame):
 	:param window: a new empty window
 	"""
 	def create_video_window(self, window):
-		pass
+		self.video_windows.append(window)
+
+		window.title("Video")
+		window.geometry("500x720")
+		window.overrideredirect(self.borderless)
+		video_window = vw.VideoWindow(window=window, filename=self.filename)
 
 	""" Remove the borders from all windows. """
 	def toggle_borders(self):
