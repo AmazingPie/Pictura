@@ -1,11 +1,9 @@
-import tkinter as tk, threading
+import tkinter as tk
 from tkinter import ttk
 from tkinter import *
 from tkinter.ttk import *
 from PIL import Image, ImageTk
-import imageio
-
-import time
+import vlc
 
 """ A scalable looping video window.
 
@@ -16,20 +14,19 @@ class VideoWindow(ttk.Frame):
 		super().__init__(window)
 		self.pack(fill="both", expand=True)
 
-		self.label = tk.Label(self)
-		self.label.pack()
+		# Create vlc instance and objects
+		self.instance = vlc.Instance("--mouse-hide-timeout=1000")
+		self.list_player = self.instance.media_list_player_new()
+		self.player = self.list_player.get_media_player()
+		media_list = self.instance.media_list_new([filename])
 
-		self.video = imageio.get_reader(filename, loop=True)
+		# Configure media
+		self.list_player.set_media_list(media_list)
+		self.list_player.set_playback_mode(vlc.PlaybackMode.loop)
+		self.player.set_hwnd(self.winfo_id()) 		# Use our window
+		self.player.audio_set_mute(True)
 
-		thread = threading.Thread(target=self.stream, args=())
-		thread.daemon = True
-		thread.start()
+		self.list_player.play()
 
-	""" Play a frame of the video stream. """
-	def stream(self):
-		while True:
-			video = self.video
-			for image in video.iter_data():
-				frame = ImageTk.PhotoImage(Image.fromarray(image))
-				self.label.config(image=frame)
-				self.label.image = frame
+	def __del__(self):
+		self.player.stop()
