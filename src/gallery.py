@@ -8,8 +8,8 @@ from tkinter.ttk import *
 This class stores previously found images/videos for later use.
 """
 class Gallery(ttk.Frame):
-	def __init__(self):
-		super().__init__()
+    def __init__(self):
+        super().__init__()
 
-		label = ttk.Label(self, text="Gallery")
-		label.pack()
+        label = ttk.Label(self, text="Gallery")
+        label.pack()
