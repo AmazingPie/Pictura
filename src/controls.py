@@ -7,6 +7,10 @@ from tkinter.ttk import *
 import glob
 import random
 
+from file.file import File, FileType
+from file.image_file import ImageFile
+from file.video_file import VideoFile
+
 """ The controls component of the main application window.
 
 This class contains various inputs (buttons, text entry boxes, etc...) to allow
@@ -82,7 +86,19 @@ class Controls(ttk.Frame):
     def choose_rand_file(self, file_list):
         length = len(file_list)
         self.file_path = file_list[random.randint(0, length)]
-        self.update_state("new_file", self.file_path)
+
+        file = None
+        file_type = File.determine_file_type(self.file_path)
+        if (file_type == FileType.IMAGE):
+            file = ImageFile(self.file_path)
+        elif (file_type == FileType.VIDEO):
+            file = VideoFile(self.file_path)
+        else:
+            # Might want to re-choose another file instead here.
+            file = File(file_path)
+            print("WARNING: File: '{}' type is not recognised.", self.file_path)
+
+        self.update_state("new_file", file)
 
     """ Add the currently selected file (the one in the viewport) to its own
         window.
