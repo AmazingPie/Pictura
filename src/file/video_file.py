@@ -1,3 +1,6 @@
+from PIL import Image, ImageTk
+import imageio
+
 from file.file import File, FileType
 import window.video_window as vw
 
@@ -13,4 +16,7 @@ class VideoFile(File):
 
     """ Return a thumbnail of given height and width for this video. """
     def get_thumbnail(self, width, height):
-        print("Thumbnail for: " + self.filename)
+        reader = imageio.get_reader(self.filename)
+        image = Image.fromarray(reader.get_next_data())
+        image.thumbnail((width, height))
+        return ImageTk.PhotoImage(image)

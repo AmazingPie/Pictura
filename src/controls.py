@@ -63,7 +63,7 @@ class Controls(ttk.Frame):
 
         # Populate lists with files from the chosen directory
         self.img_list = self.find_files_from_ext(["jpg", "jpeg", "png"])
-        self.video_list = self.find_files_from_ext(["gif", "mp4", "webm"])
+        self.video_list = self.find_files_from_ext(["gif", "mp4"])
 
     """ Find filenames with the given extensions.
 
