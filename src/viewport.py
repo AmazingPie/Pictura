@@ -21,8 +21,10 @@ class Viewport(ttk.Frame):
         self.windows = []
 
         # Create label
-        self.label = ttk.Label(self, text="Controls!")
-        self.label.pack()
+        self.filename = tk.StringVar()
+        self.filename.set("...")
+        self.filename_label = ttk.Label(self, textvariable=self.filename)
+        self.filename_label.pack()
 
         # Create canvas
         self.canvas = tk.Canvas(self, width=self.CANVAS_WIDTH, height=self.CANVAS_HEIGHT,
@@ -32,6 +34,8 @@ class Viewport(ttk.Frame):
     """ Update the viewport with the given file. """
     def update_viewport(self, file):
         self.file = file
+        self.filename.set(self.file.get_name())
+
         if (self.file.get_file_type() == FileType.UNKNOWN):
             print("ERROR: File type unknown - cannot create thumbnail.")
             return

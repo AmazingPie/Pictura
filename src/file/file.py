@@ -29,6 +29,10 @@ class File():
         else:
             return FileType.UNKNOWN
 
+    """ Return the full file path to this file. """
+    def get_name(self):
+        return self.filename
+
     """ Return this file's type. """
     def get_file_type(self):
         return self.file_type
